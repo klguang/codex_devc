@@ -35,7 +35,13 @@
 
 2. 配置 `.env`
 
-`.env` 同时用于 Docker build 阶段和容器运行阶段，常见配置如下：
+先基于模板生成本地 `.env`：
+
+```bash
+cp .env.example .env
+```
+
+`.env` 同时用于 Docker build 阶段和容器运行阶段，模板内容如下：
 
 ```bash
 HTTP_PROXY=http://host.docker.internal:7890
@@ -80,7 +86,7 @@ docker ps
 
 ## 注意事项
 
-- `.env` 里可能包含代理或认证信息，开源前不要提交真实内容。
+- `.env` 里可能包含代理或认证信息，开源前不要提交真实内容；请提交 `.env.example` 作为模板。
 - 修改 `.devcontainer/Dockerfile` 或 `.devcontainer/devcontainer.json` 后，需要重新 `Rebuild and Reopen in Container`。
 - 该模板依赖宿主机 Docker；如果宿主机 Docker 不可用，容器内的 `docker ps` 和 Testcontainers 也无法正常工作。
 - 当前仓库只提供开发环境模板，不包含示例业务代码或 CI 配置。
