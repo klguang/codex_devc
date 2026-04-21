@@ -38,6 +38,7 @@
     "vscode": {
       "extensions": [
         "ms-azuretools.vscode-docker",
+        "openai.chatgpt",
         "vscjava.vscode-java-pack",
         "vscjava.vscode-maven",
         "vmware.vscode-spring-boot"
