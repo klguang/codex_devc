@@ -98,10 +98,11 @@ RUN if ! id -u vscode >/dev/null 2>&1; then \
     fi \
  && install -d -o vscode -g vscode /home/vscode/.m2 \
  && printf "vscode ALL=(ALL) NOPASSWD:ALL\n" > /etc/sudoers.d/vscode \
- && chmod 0440 /etc/sudoers.d/vscode \
- && rm -f /tmp/devcontainer-proxy.env
+ && chmod 0440 /etc/sudoers.d/vscode
 
 COPY --chown=vscode:vscode .devcontainer/maven/settings.xml /home/vscode/.m2/settings.xml
+
+RUN rm -f /tmp/devcontainer-proxy.env
 
 ENV HOME=/home/vscode
 
