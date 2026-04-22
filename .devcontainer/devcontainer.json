@@ -32,7 +32,8 @@
   },
   "mounts": [
     "source=maven-repo,target=/home/vscode/.m2/repository,type=volume",
-    "source=npm-cache,target=/home/vscode/.npm,type=volume"
+    "source=npm-cache,target=/home/vscode/.npm,type=volume",
+    "source=codex-auth,target=/home/vscode/.codex,type=volume"
   ],
   "customizations": {
     "vscode": {
