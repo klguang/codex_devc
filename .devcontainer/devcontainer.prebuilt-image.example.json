@@ -1,6 +1,6 @@
 {
-  "name": "java-springboot-testcontainers",
-  "image": "ghcr.io/your-org/devcontainers/java-springboot-testcontainers:1.0.0",
+  "name": "springboot-typescript-codex",
+  "image": "docker.io/kevin-agent/springboot-typescript-codex:1.0.0",
   "init": true,
   "shutdownAction": "stopContainer",
   "remoteUser": "vscode",

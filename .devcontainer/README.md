@@ -10,7 +10,7 @@
 
 ## 目录内容
 
-- `Dockerfile`：定义基础开发镜像，包含 Java、Maven、Node.js、Codex CLI 等工具
+- `Dockerfile`：定义基础开发镜像，包含常用系统工具、Java、Maven、Node.js、TypeScript、Codex CLI 等工具
 - `devcontainer.json`：当前仓库默认使用的 Dev Container 配置，采用本地构建模式
 - `devcontainer.prebuilt-image.example.json`：给其他项目复用时参考的预构建镜像版配置
 - `scripts/post-start.sh`：容器每次启动时执行的脚本，用于修复挂载卷权限并检查 Docker 可用性
@@ -62,6 +62,7 @@
 - Java
 - Maven
 - Node.js
+- TypeScript
 - Codex CLI
 - `vscode` 用户
 - Docker 相关工具支持
@@ -73,7 +74,7 @@
 示例命令：
 
 ```bash
-docker build -f .devcontainer/Dockerfile -t ghcr.io/your-org/devcontainers/java-springboot-testcontainers:1.0.0 .
+docker build -f .devcontainer/Dockerfile -t docker.io/kevin-agent/springboot-typescript-codex:1.0.0 .
 ```
 
 镜像推送到你们自己的镜像仓库后，其他项目就可以基于 `devcontainer.prebuilt-image.example.json` 改成自己的 `devcontainer.json`，从而避免重复构建相同工具链。

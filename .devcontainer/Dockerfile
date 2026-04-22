@@ -5,6 +5,11 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG UBUNTU_MIRROR=https://mirrors.aliyun.com/ubuntu
 ARG NODE_MAJOR=22
 ARG CODEX_VERSION=0.122.0
+ARG COMMON_APT_PACKAGES="ca-certificates curl git gnupg sudo tmux tzdata vim wget zip"
+ARG JAVA_APT_PACKAGES="maven openjdk-21-jdk"
+ARG NODEJS_APT_PACKAGES="nodejs"
+ARG TYPESCRIPT_NPM_PACKAGES="typescript"
+ARG CODEX_NPM_PACKAGE="@openai/codex"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
@@ -29,39 +34,63 @@ deb %s noble-backports main restricted universe multiverse\n" \
 RUN ln -snf "/usr/share/zoneinfo/${TZ}" /etc/localtime \
  && echo "${TZ}" > /etc/timezone
 
-# 安装常用工具
+# 安装常用系统工具
 RUN set -a \
  && source /tmp/devcontainer-proxy.env \
  && set +a \
- && apt-get update -o Acquire::Retries=3 \
- && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    curl \
-    git \
-    gnupg \
-    maven \
-    openjdk-21-jdk \
-    sudo \
-    tmux \
-    tzdata \
-    vim \
-    wget \
-    zip \
+ && if [ -n "${COMMON_APT_PACKAGES}" ]; then \
+      apt-get update -o Acquire::Retries=3; \
+      apt-get install -y --no-install-recommends ${COMMON_APT_PACKAGES}; \
+    fi \
  && rm -rf /var/lib/apt/lists/*
 
-# 配置 NodeSource 源并安装 Node.js、Codex CLI
+# 安装 Java / Maven 工具链
 RUN set -a \
  && source /tmp/devcontainer-proxy.env \
  && set +a \
- && install -d -m 0755 /etc/apt/keyrings \
- && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
-    | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
- && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" \
-    > /etc/apt/sources.list.d/nodesource.list \
- && apt-get update -o Acquire::Retries=3 \
- && apt-get install -y --no-install-recommends nodejs \
- && npm install -g "@openai/codex@${CODEX_VERSION}" \
+ && if [ -n "${JAVA_APT_PACKAGES}" ]; then \
+      apt-get update -o Acquire::Retries=3; \
+      apt-get install -y --no-install-recommends ${JAVA_APT_PACKAGES}; \
+    fi \
  && rm -rf /var/lib/apt/lists/*
+
+# 配置 NodeSource 源
+RUN set -a \
+ && source /tmp/devcontainer-proxy.env \
+ && set +a \
+ && if [ -n "${NODEJS_APT_PACKAGES}" ]; then \
+      install -d -m 0755 /etc/apt/keyrings; \
+      curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+        | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
+      echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" \
+        > /etc/apt/sources.list.d/nodesource.list; \
+    fi
+
+# 安装 Node.js
+RUN set -a \
+ && source /tmp/devcontainer-proxy.env \
+ && set +a \
+ && if [ -n "${NODEJS_APT_PACKAGES}" ]; then \
+      apt-get update -o Acquire::Retries=3; \
+      apt-get install -y --no-install-recommends ${NODEJS_APT_PACKAGES}; \
+    fi \
+ && rm -rf /var/lib/apt/lists/*
+
+# 安装全局 TypeScript 工具
+RUN set -a \
+ && source /tmp/devcontainer-proxy.env \
+ && set +a \
+ && if [ -n "${NODEJS_APT_PACKAGES}" ] && [ -n "${TYPESCRIPT_NPM_PACKAGES}" ]; then \
+      npm install -g ${TYPESCRIPT_NPM_PACKAGES}; \
+    fi
+
+# 安装 Codex CLI
+RUN set -a \
+ && source /tmp/devcontainer-proxy.env \
+ && set +a \
+ && if [ -n "${NODEJS_APT_PACKAGES}" ] && [ -n "${CODEX_NPM_PACKAGE}" ]; then \
+      npm install -g "${CODEX_NPM_PACKAGE}@${CODEX_VERSION}"; \
+    fi
 
 # 仅在基础镜像未提供 vscode 用户时再创建
 RUN if ! id -u vscode >/dev/null 2>&1; then \

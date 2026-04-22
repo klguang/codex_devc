@@ -10,6 +10,7 @@
 
 - 基于 `Ubuntu 24.04`
 - 内置 `OpenJDK 21`、`Maven`、`Node.js 22`
+- 内置全局 `TypeScript`
 - 预装 `@openai/codex` CLI
 - 支持 `docker-outside-of-docker`
 - 适合运行 Spring Boot + Testcontainers
@@ -23,6 +24,7 @@
 - Java：`OpenJDK 21`
 - Maven：默认读取 `/home/vscode/.m2/settings.xml`
 - Node.js：`22.x`
+- TypeScript：全局 npm 安装
 - Codex CLI：`0.122.0`
 - Docker：通过 Dev Container Feature 访问宿主机 Docker
 - 持久化卷：
@@ -94,6 +96,12 @@ docker ps
 - 启动时自动修复挂载目录权限
 - 默认转发 `8080` 端口
 - 预装 Docker、Java Extension Pack、Maven for Java、Spring Boot Extension Pack
+
+### Dockerfile 可裁剪性
+
+- `.devcontainer/Dockerfile` 已按“常用系统工具、Java/Maven、Node.js、TypeScript、Codex CLI”拆成独立安装段
+- 文件顶部的 `ARG` 可以直接调整各类安装项
+- 如果你想裁掉某一类工具，优先清空对应的 `ARG`，比在一大段安装命令里逐项删改更容易
 
 ## 如何复用到其他项目
 
