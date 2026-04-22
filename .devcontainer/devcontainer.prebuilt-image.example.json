@@ -1,0 +1,52 @@
+{
+  "name": "java-springboot-testcontainers",
+  "image": "ghcr.io/your-org/devcontainers/java-springboot-testcontainers:1.0.0",
+  "init": true,
+  "shutdownAction": "stopContainer",
+  "remoteUser": "vscode",
+  "runArgs": [
+    "--add-host=host.docker.internal:host-gateway",
+    "--env-file", "${localWorkspaceFolder}/.env"
+  ],
+  "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind",
+  "workspaceFolder": "${localWorkspaceFolder}",
+  "containerEnv": {
+    "COMPOSE_DOCKER_CLI_BUILD": "1",
+    "DOCKER_BUILDKIT": "1",
+    "MAVEN_CONFIG": "/home/vscode/.m2",
+    "TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE": "/var/run/docker.sock"
+  },
+  "remoteEnv": {
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+  },
+  "mounts": [
+    "source=maven-repo,target=/home/vscode/.m2/repository,type=volume",
+    "source=npm-cache,target=/home/vscode/.npm,type=volume",
+    "source=codex-auth,target=/home/vscode/.codex,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "openai.chatgpt",
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-maven",
+        "vmware.vscode-spring-boot"
+      ],
+      "settings": {
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "maven.executable.path": "/usr/bin/mvn",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "postCreateCommand": "java -version && mvn -version && docker version && node -v && npm -v && codex --version || true",
+  "postStartCommand": "bash .devcontainer/scripts/post-start.sh",
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "Spring Boot",
+      "onAutoForward": "notify"
+    }
+  }
+}
