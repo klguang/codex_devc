@@ -67,11 +67,7 @@ RUN set -a \
 RUN if ! id -u vscode >/dev/null 2>&1; then \
       useradd -m -s /bin/bash vscode; \
     fi \
- && install -d -o vscode -g vscode \
-      /home/vscode/.m2 \
-      /home/vscode/.m2/repository \
-      /home/vscode/.npm \
-      /home/vscode/.codex \
+ && install -d -o vscode -g vscode /home/vscode/.m2 \
  && printf "vscode ALL=(ALL) NOPASSWD:ALL\n" > /etc/sudoers.d/vscode \
  && chmod 0440 /etc/sudoers.d/vscode \
  && rm -f /tmp/devcontainer-proxy.env

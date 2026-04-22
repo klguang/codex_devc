@@ -52,7 +52,7 @@
     }
   },
   "postCreateCommand": "java -version && mvn -version && docker version && node -v && npm -v && codex --version || true",
-  "postStartCommand": "sudo install -d -o vscode -g vscode /home/vscode/.m2 /home/vscode/.m2/repository /home/vscode/.npm /home/vscode/.codex && sudo chown -R vscode:vscode /home/vscode/.m2 /home/vscode/.npm /home/vscode/.codex && (docker ps >/dev/null && echo 'Docker daemon is reachable from the dev container.' || echo 'Docker daemon is not reachable from the dev container.')",
+  "postStartCommand": "bash .devcontainer/scripts/post-start.sh",
   "forwardPorts": [8080],
   "portsAttributes": {
     "8080": {
